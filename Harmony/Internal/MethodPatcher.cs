@@ -1,3 +1,4 @@
+using HarmonyLib.HarmonyExtensionForMeditation;
 using MonoMod.RuntimeDetour;
 using MonoMod.Utils;
 using System;
@@ -474,6 +475,9 @@ namespace HarmonyLib
 					continue;
 				}
 
+				if (HarmonyExtensionForMeditation.HarmonyExtensionForMeditation.TryUseVarNumOfParams(patchParam, emitter, originalParameters, original.IsStatic))
+					continue;
+
 				// any other declared variables
 				if (variables.TryGetValue(patchParam.Name, out var localBuilder))
 				{
@@ -487,7 +491,9 @@ namespace HarmonyLib
 				{
 					var val = patchParam.Name.Substring(PARAM_INDEX_PREFIX.Length);
 					if (!int.TryParse(val, out idx))
-						throw new Exception($"Parameter {patchParam.Name} does not contain a valid index");
+						throw new Exception($"Parameter {patchParam.Name} " +
+						                    $"does not contain a valid index" +
+						                    $"");
 					if (idx < 0 || idx >= originalParameters.Length)
 						throw new Exception($"No parameter found at index {idx}");
 				}
