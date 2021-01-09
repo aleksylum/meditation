@@ -44,15 +44,24 @@ namespace UI.Logic
 				{
 					Console.WriteLine(ex);
 				}
-				//  MemberInfo[] notInherited = GetType("MySubClass").GetMembers();
-				//TODO load .ctor etc.
 			}
 		}
 
 		private void LoadMethods(Type type, String assemblyName)
 		{
-			MethodInfo[] methodInfos = type.GetMethods();
+			var flags = BindingFlags.DeclaredOnly
+			            |BindingFlags.Public
+			            | BindingFlags.NonPublic
+			            | BindingFlags.Instance
+			            | BindingFlags.Static
+			            | BindingFlags.GetField
+			            | BindingFlags.SetField
+			            | BindingFlags.GetProperty
+			            | BindingFlags.SetProperty;
 
+		MethodInfo[] methodInfos = type.GetMethods(flags);
+
+			//TODO load .ctor etc.
 			foreach (MethodInfo methodInfo in methodInfos)
 			{
 				try

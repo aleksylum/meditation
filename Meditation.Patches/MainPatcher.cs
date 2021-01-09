@@ -3,6 +3,7 @@
 using Meditation.Data;
 using Microsoft.Win32;
 using System;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -79,8 +80,9 @@ namespace Meditation.Patches
 				using (RegistryKey key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView))//Cannot move to Meditation.Data because of deadlock!!! 
 				{
 					RegistryKey subkey = key.OpenSubKey(@"SOFTWARE\Meditation");
-					String rootPath = (String)subkey.GetValue(@"MeditationAssemblyPath");
-					String path = $"{rootPath}\\{args.Name.Split(',')[0]}.dll";
+					String rootPath = (String)subkey.GetValue("MeditationPatchesDll");
+					String rootFolder = Path.GetDirectoryName(Path.GetDirectoryName(rootPath));
+					String path = $"{rootFolder}\\{args.Name.Split(',')[0]}.dll";
 					Console.WriteLine("Loading " + path);
 					return Assembly.LoadFile(path);
 				}
